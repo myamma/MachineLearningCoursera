@@ -4,7 +4,8 @@ function plotData(X, y)
 %   and o for the negative examples. X is assumed to be a Mx2 matrix.
 
 % Create New Figure
-figure; hold on;
+figure('Position',[500,500,2000,1300]);
+hold on;
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: Plot the positive and negative examples on a
@@ -13,11 +14,13 @@ figure; hold on;
 %
 
 
-
-
-
-
-
+% Find Indices of Positive and Negative Examples
+pos = find(y == 1); neg = find(y == 0);
+% Plot Examples
+plot(X(pos, 1), X(pos, 2), 'k+','LineWidth', 2, ...
+'MarkerSize', 20);
+plot(X(neg, 1), X(neg, 2), 'ko', 'MarkerFaceColor', 'y', ...
+'MarkerSize', 20);
 
 
 % =========================================================================

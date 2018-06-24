@@ -18,7 +18,16 @@ grad = zeros(size(theta));
 %               derivatives of the cost w.r.t. each parameter in theta
 
 
+hypo = sigmoid(X*theta);
+J = -(1/m)*sum(y.*log(hypo) + (1-y).*log(1-hypo)) + (lambda/2/m)*sum(theta(2:end).^2);
 
+for i = 1:size(theta)
+  if i == 1  
+    grad(i) = (1/m)*sum((hypo - y).*X(:,i));
+  else
+    grad(i) = (1/m)*sum((hypo - y).*X(:,i)) + theta(i)*lambda/m;
+  end
+end
 
 
 
