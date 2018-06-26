@@ -70,10 +70,11 @@ for i = 1:size(y,1)
   y_matrix(i,y(i)) = 1;  
 endfor
 
-X = [ones(m,1) X];
-a2 = sigmoid(X*Theta1');
-a2 = [ones(m,1) a2];
-a3 = sigmoid(a2*Theta2');
+X = [ones(m,1) X]; %X or a1 is 5000*401
+a1 = X;
+z2 = X*Theta1'; %z2 is 5000*25
+a2 = [ones(m,1) sigmoid(z2)]; %a2 is 5000*26
+a3 = sigmoid(a2*Theta2'); %a3 is 5000*10
 
 ##[NA max_ind] = max(a3,[],2);
 ##p = mod(max_ind, 10);
@@ -90,8 +91,24 @@ J = J_preReg + (lambda/2/m)*(sum(sum(Theta1(:,2:end).^2)) + ...
     sum(sum(Theta2(:,2:end).^2)));
     
 % Part2 -------------------------------------------------------------
+k = size(Theta2,1);
+delta3 = zeros(m, k); %delta3 is 5000*10
+%delta3 = a3.*y_matrix - y_matrix;
+delta3 = a3 - y_matrix;
+delta2 = delta3*Theta2(:,2:end).*sigmoidGradient(z2); %delta2 is 5000*25
+Theta1_grad = delta2'*X; %Theta1_grad is 25*401
+Theta2_grad = delta3'*a2; %Theta2_grad is 10*26
 
+Theta1_grad = Theta1_grad/m;
+Theta2_grad = Theta2_grad/m;
 
+% Part3 -------------------------------------------------------------
+Theta1_reg = Theta1;
+Theta1_reg(:,1) = 0;
+Theta2_reg = Theta2;
+Theta2_reg(:,1) = 0;
+Theta1_grad = Theta1_grad + (lambda/m)*Theta1_reg;
+Theta2_grad = Theta2_grad + (lambda/m)*Theta2_reg;
 
 % =========================================================================
 
